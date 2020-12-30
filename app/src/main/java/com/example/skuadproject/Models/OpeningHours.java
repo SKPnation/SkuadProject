@@ -1,20 +1,14 @@
 package com.example.skuadproject.Models;
 
 public class OpeningHours {
-    private Boolean open_now;
 
-    public OpeningHours() {
+    private Boolean openNow;
+
+    public Boolean getOpenNow() {
+        return openNow;
     }
 
-    public OpeningHours(Boolean open_now) {
-        this.open_now = open_now;
-    }
-
-    public Boolean getOpen_now() {
-        return open_now;
-    }
-
-    public void setOpen_now(Boolean open_now) {
-        this.open_now = open_now;
+    public void setOpenNow(Boolean openNow) {
+        this.openNow = openNow;
     }
 }

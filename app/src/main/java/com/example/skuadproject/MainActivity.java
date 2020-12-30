@@ -1,10 +1,18 @@
 package com.example.skuadproject;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //import retrofit2.Call;
@@ -27,7 +36,7 @@ import java.util.List;
 //import retrofit2.Retrofit;
 //import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CustomAdapter.CustomAdapterListener {
 
     private static final String URL_DATA = "https://raw.githubusercontent.com/SKPnation/Skuadjson/master/results_list.json";
 
@@ -37,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
+    private SearchView searchView;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +59,34 @@ public class MainActivity extends AppCompatActivity {
         //recyclerView Configuration
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        searchView = findViewById(R.id.searchBar);
+
         listItems = new ArrayList<>();
         //openingHours = new ArrayList<>();
 
         loadRecyclerViewData();
 
         //getRestaurantResponse();
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                customAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                customAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadRecyclerViewData() {
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 URL_DATA,
@@ -73,16 +104,25 @@ public class MainActivity extends AppCompatActivity {
                             //Creating a JSONObject for fetching single restaurant data
                             JSONObject restaurantDetail = jsonArray.getJSONObject(i);
 
-                            //JSONObject openingHours = restaurantDetail.getJSONObject("opening_hours");
-
                             Result result = new Result();
-                            result.setIcon(restaurantDetail.getString("icon"));
                             result.setName(restaurantDetail.getString("name"));
+                            result.setIcon(restaurantDetail.getString("icon"));
+                            JSONObject jo = restaurantDetail.optJSONObject("opening_hours");
+                            if (jo != null) result.setOpeningHours(jo.getString("open_now"));
+
+                            JSONArray jowArray = restaurantDetail.getJSONArray("photos");
+                            JSONObject jow = (JSONObject) jowArray.get(0);
+                            result.setHtmlAttributions(jow.getString("html_attributions"));
+                            result.setBusinessStatus(restaurantDetail.getString("business_status"));
+                            JSONArray typesArray = restaurantDetail.getJSONArray("types");
+                            result.setItemType(typesArray.join(", "));
+                            result.setItemAddress(restaurantDetail.getString("vicinity"));
+                            result.setRating(restaurantDetail.getString("rating"));
 
                             listItems.add(result);
                         }
 
-                        customAdapter = new CustomAdapter(listItems, getApplicationContext());
+                        customAdapter = new CustomAdapter(listItems, getApplicationContext(), this);
                         recyclerView.setAdapter(customAdapter);
 
                     } catch (Exception e) {
@@ -95,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onItemSelected(Result result) {
+        Toast.makeText(getApplicationContext(), "Selected: " + result.getHtmlAttributions(), Toast.LENGTH_LONG).show();
     }
 
 //    private void getRestaurantResponse() {
