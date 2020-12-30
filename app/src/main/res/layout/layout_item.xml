@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="3.5dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1.9">
+
+            <ImageView
+                android:id="@+id/item_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:padding="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Oventary Pizza"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/item_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pizza, lodging"
+                    android:textColor="#7c7c7c"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/item_buisness_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OPERATIONAL"
+                    android:textColor="#707070"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/item_open_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="open"
+                    android:textColor="#EF8A00"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/item_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No.2, Lekki County Homes"
+                    android:textColor="#0098D1"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/item_rating"
+            android:background="@drawable/rating_button"
+            android:layout_width="25dp"
+            android:layout_height="35dp"
+            android:layout_weight="0.1" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
